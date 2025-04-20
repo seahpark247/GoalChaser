@@ -30,6 +30,7 @@ struct EditorView: View {
                 if !goals.isEmpty {
                     Section {
                         ForEach(Array(goals.enumerated()), id: \.offset) { index, goal in
+                            // TODO: 이거 자체를 버튼으로 만들어서-> days 2-31 설정하게 만들기
                             HStack {
                                 Image(systemName: "\(index + 1).circle")
                                 Text(goal)
