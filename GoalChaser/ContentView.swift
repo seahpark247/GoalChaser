@@ -10,6 +10,59 @@
 
 import SwiftUI
 
+//@Observable
+//class Expenses {
+//    var items = [ExpenseItem]() {
+//        didSet {
+//            if let encoded = try? JSONEncoder().encode(items) {
+//                UserDefaults.standard.set(encoded, forKey: "Items")
+//            }
+//        }
+//    }
+//    
+//    init() {
+//        if let savedItems = UserDefaults.standard.data(forKey: "Items") {
+//            if let decodedItems = try? JSONDecoder().decode([ExpenseItem].self, from: savedItems) {
+//                items = decodedItems
+//                return // exit initializer
+//            }
+//        }
+//        
+//        items = []
+//    }
+//}
+
+struct GoalItem: Identifiable, Codable {
+    var id = UUID()
+    var title: String
+    var days: Int = 30
+    var color = "Blue"
+    var buttonShape = "Square"
+    var isDone: Bool = false
+}
+
+@Observable
+class Goals {
+    var items = [GoalItem]() {
+        didSet {
+            if let encoded = try? JSONEncoder().encode(items) {
+                UserDefaults.standard.set(encoded, forKey: "Items")
+            }
+        }
+    }
+    
+    init() {
+        if let savedItems = UserDefaults.standard.data(forKey: "Items") {
+            if let decodedItems = try? JSONDecoder().decode([GoalItem].self, from: savedItems) {
+                items = decodedItems
+                return 
+            }
+        }
+        
+        items = []
+    }
+}
+
 struct ContentView: View {
     @State private var goalTitle: String = "Study 1 hour"
     @State private var selectedTab = 0
