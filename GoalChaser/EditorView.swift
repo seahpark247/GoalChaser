@@ -8,34 +8,62 @@
 import SwiftUI
 
 struct EditorView: View {
-    @State private var goals: [String] = []
+    @Bindable var goals: Goals
     @State private var inputGoal: String = ""
     @State private var showAlert = false
+    @State private var selectedDays: Int = 7 // Default value of 7
     
     var inputDisabled: Bool {
         // limit 5
-        goals.count > 4
+        goals.items.count > 4
     }
     
     var body: some View {
         NavigationStack {
             Form {
-                HStack {
+                Section {
                     TextField("Input Your Goal", text: $inputGoal).disabled(inputDisabled)
-                    Button(action: {addGoal()}) {
-                        Image(systemName: "plus").foregroundColor(!inputDisabled ? .blue : .gray)
+                    
+                    // Day picker
+                    ZStack {
+                        Picker("Days you want to achieve", selection: $selectedDays) {
+                            ForEach(2...31, id: \.self) { day in
+                                Text("\(day)").tag(day)
+                            }
+                        }
+                        .disabled(inputDisabled)
+                        .opacity(inputDisabled ? 0.5 : 1)
+                        
+                        // inputDisabled일 때만 나타나는 투명한 오버레이
+                        if inputDisabled {
+                            Rectangle()
+                                .fill(Color.clear)  // 투명
+                                .contentShape(Rectangle())  // 전체 영역이 탭 가능하도록
+                                .onTapGesture {} // 빈 탭 제스처로 기본 동작 차단
+                        }
                     }
-                }.padding()
+
+                    
+                    Button(action: {addGoal()}) {
+                        HStack() {
+                            Spacer()
+                            Image(systemName: "plus").foregroundColor(!inputDisabled ? .blue : .gray)
+                            Spacer()
+                        }
+                    }
+                }
                 
-                if !goals.isEmpty {
+                if !goals.items.isEmpty {
                     Section {
-                        ForEach(Array(goals.enumerated()), id: \.offset) { index, goal in
-                            // TODO: 이거 자체를 버튼으로 만들어서-> days 2-31 설정하게 만들기
+                        ForEach(Array(goals.items.enumerated()), id: \.element.id) { index, goal in
                             HStack {
                                 Image(systemName: "\(index + 1).circle")
-                                Text(goal)
+                                Text(goal.title)
+                                Spacer()
+                                Text("Day \(goal.days)")
                             }
-                        }.onDelete(perform: removeGoal)
+                        }
+                        .onDelete(perform: removeGoal)
                     }
                 }
             }
@@ -56,16 +84,16 @@ struct EditorView: View {
             return
         }
         
-        goals.append(inputGoal)
+        goals.items.append(GoalItem(title: inputGoal, days: selectedDays))
         inputGoal = ""
+        selectedDays = 7
     }
     
     func removeGoal(at offsets: IndexSet) {
-        goals.remove(atOffsets: offsets)
+        goals.items.remove(atOffsets: offsets)
     }
-    
 }
 
 #Preview {
-    EditorView()
+    EditorView(goals: Goals())
 }
