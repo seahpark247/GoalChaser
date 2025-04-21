@@ -13,9 +13,14 @@ struct EditorView: View {
     @State private var showAlert = false
     @State private var selectedDays: Int = 7 // Default value of 7
     
+    // 완료되지 않은 목표만 필터링하는 계산 속성
+    var activeGoals: [GoalItem] {
+        goals.items.filter { $0.days > 0 }
+    }
+    
     var inputDisabled: Bool {
         // limit 5
-        goals.items.count > 4
+        activeGoals.count > 4
     }
     
     var body: some View {
@@ -27,7 +32,7 @@ struct EditorView: View {
                     // Day picker
                     ZStack {
                         Picker("Days you want to achieve", selection: $selectedDays) {
-                            ForEach(2...31, id: \.self) { day in
+                            ForEach(1...31, id: \.self) { day in
                                 Text("\(day)").tag(day)
                             }
                         }
@@ -53,17 +58,28 @@ struct EditorView: View {
                     }
                 }
                 
-                if !goals.items.isEmpty {
+                if !activeGoals.isEmpty {
                     Section {
-                        ForEach(Array(goals.items.enumerated()), id: \.element.id) { index, goal in
+                        ForEach(activeGoals) { goal in
                             HStack {
-                                Image(systemName: "\(index + 1).circle")
-                                Text(goal.title)
-                                Spacer()
-                                Text("Day \(goal.days)")
+                                // 인덱스 대신 실제 활성 목표의 인덱스 계산
+                                if let index = activeGoals.firstIndex(where: { $0.id == goal.id }) {
+                                    Image(systemName: "\(index + 1).circle")
+                                    Text(goal.title)
+                                    Spacer()
+                                    Text("Day \(goal.days)")
+                                }
+                            }
+                            .swipeActions {
+                                Button(role: .destructive) {
+                                    if let index = goals.items.firstIndex(where: { $0.id == goal.id }) {
+                                        goals.items.remove(at: index)
+                                    }
+                                } label: {
+                                    Label("Delete", systemImage: "trash")
+                                }
                             }
                         }
-                        .onDelete(perform: removeGoal)
                     }
                 }
             }
@@ -90,7 +106,15 @@ struct EditorView: View {
     }
     
     func removeGoal(at offsets: IndexSet) {
-        goals.items.remove(atOffsets: offsets)
+        // 활성 목표의 인덱스를 원본 배열의 인덱스로 변환
+        let originalIndices = offsets.map { activeGoals[$0].id }.compactMap { id in
+            goals.items.firstIndex { $0.id == id }
+        }
+        
+        // 원본 배열에서 해당 항목 삭제
+        for index in originalIndices.sorted(by: >) {
+            goals.items.remove(at: index)
+        }
     }
 }
 
