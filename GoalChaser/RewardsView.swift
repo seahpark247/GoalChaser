@@ -7,9 +7,19 @@
 
 import SwiftUI
 
+// 응원 메시지를 위한 데이터 구조
+struct RewardMessages: Codable {
+    let messages: [String]
+}
+
 struct RewardsView: View {
     @State var goals: Goals
     @State private var showConfetti = false
+    @State private var showRewardAlert = false
+    @State private var rewardMessage = ""
+    
+    // 앱 시작 시 JSON에서 메시지 로드
+    @State private var rewardMessages: [String] = []
     
     var completedGoals: [GoalItem] {
         goals.items.filter { $0.days == 0 }
@@ -37,6 +47,15 @@ struct RewardsView: View {
                     .padding(.vertical, 50)
                 } else {
                     List {
+                        Section(header: Text("Achievement Statistics").font(.headline)) {
+                            HStack {
+                                Text("Completed Goals")
+                                Spacer()
+                                Text("\(completedGoals.count)")
+                                    .fontWeight(.bold)
+                            }
+                        }
+
                         Section(header: Text("Completed Goals").font(.headline)) {
                             ForEach(completedGoals) { goal in
                                 HStack {
@@ -44,7 +63,7 @@ struct RewardsView: View {
                                         .foregroundColor(.green)
                                     
                                     Text(goal.title)
-                                        .strikethrough() // 취소선 추가
+                                        .strikethrough()
                                     
                                     Spacer()
                                     
@@ -54,61 +73,160 @@ struct RewardsView: View {
                                 .padding(.vertical, 8)
                             }
                         }
-                        
-                        Section(header: Text("Achievement Statistics").font(.headline)) {
-                            HStack {
-                                Text("Completed Goals")
-                                Spacer()
-                                Text("\(completedGoals.count)")
-                                    .fontWeight(.bold)
-                            }
-                        }
                     }
                 }
             }
             .navigationTitle("My Achievements")
+            .toolbar {
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button("Secret Reward") {
+                        // 랜덤 응원 메시지 선택
+                        if !rewardMessages.isEmpty {
+                            rewardMessage = rewardMessages.randomElement() ?? "You're amazing!"
+                        } else {
+                            rewardMessage = "You're amazing!" // 기본 메시지
+                        }
+                        showRewardAlert = true
+                    }
+                    .foregroundColor(.blue)
+                    .font(.headline)
+                }
+            }
+            .alert(isPresented: $showRewardAlert) {
+                Alert(
+                    title: Text("✨ Look at YOU!!! ✨"),
+                    message: Text(rewardMessage),
+                    dismissButton: .default(Text("Thank you!"))
+                )
+            }
             .onAppear {
-                // 완료된 목표가 있으면 축하 효과 표시
+                // 메시지 로드
+                loadEncouragementMessages()
+                
                 if !completedGoals.isEmpty {
+                    // Show confetti immediately with no delay
                     showConfetti = true
                     
-                    // 3초 후에 효과 끄기
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+                    // Hide confetti after 2 seconds
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
                         showConfetti = false
                     }
                 }
             }
             .overlay(
-                // 간단한 축하 효과 (실제 앱에서는 더 멋진 애니메이션을 구현할 수 있습니다)
-                Group {
+                ZStack {
                     if showConfetti {
-                        ZStack {
-                            ForEach(0..<20) { i in
-                                Circle()
-                                    .fill(Color.random)
-                                    .frame(width: CGFloat.random(in: 5...15))
-                                    .position(
-                                        x: CGFloat.random(in: 0...UIScreen.main.bounds.width),
-                                        y: CGFloat.random(in: 0...UIScreen.main.bounds.height)
-                                    )
-                                    .animation(
-                                        Animation.linear(duration: 2)
-                                            .repeatForever(autoreverses: false)
-                                            .delay(Double.random(in: 0...0.5)),
-                                        value: showConfetti
-                                    )
-                            }
-                        }
-                        .transition(.opacity)
+                        ConfettiView()
+                            .edgesIgnoringSafeArea(.all)
                     }
                 }
             )
         }
     }
     
+    // JSON 파일에서 응원 메시지 로드하는 함수
+    private func loadEncouragementMessages() {
+        guard let url = Bundle.main.url(forResource: "reward_messages", withExtension: "json") else {
+            print("JSON 파일을 찾을 수 없습니다.")
+            return
+        }
+        
+        do {
+            let data = try Data(contentsOf: url)
+            let decoder = JSONDecoder()
+            let jsonData = try decoder.decode(RewardMessages.self, from: data)
+            self.rewardMessages = jsonData.messages
+        } catch {
+            print("JSON 파일 로드 오류: \(error.localizedDescription)")
+        }
+    }
 }
 
-// 랜덤 색상 생성을 위한 확장
+// Improved confetti animation component
+struct ConfettiView: View {
+    let confettiCount = 12 // Slightly increased for bigger circles
+    let colors: [Color] = [.red, .orange, .yellow, .green, .blue, .purple, .pink]
+    
+    var body: some View {
+        GeometryReader { geometry in
+            ZStack {
+                ForEach(0..<confettiCount, id: \.self) { index in
+                    ConfettiPiece(
+                        color: colors[index % colors.count],
+                        width: geometry.size.width,
+                        height: geometry.size.height
+                    )
+                }
+            }
+        }
+    }
+}
+
+// Individual confetti piece with natural falling animation
+struct ConfettiPiece: View {
+    let color: Color
+    let width: CGFloat
+    let height: CGFloat
+    
+    @State private var location = CGPoint(x: 0, y: 0)
+    @State private var opacity: Double = 0
+    @State private var scale: CGFloat = 0.1
+    @State private var rotation: Double = 0
+    
+    var body: some View {
+        Circle()
+            .fill(color)
+            .frame(width: CGFloat.random(in: 20...35), height: CGFloat.random(in: 20...35)) // Larger circles
+            .scaleEffect(scale)
+            .position(location)
+            .opacity(opacity)
+            .rotationEffect(.degrees(rotation))
+            .onAppear {
+                // Random starting position at the top
+                let randomX = CGFloat.random(in: 0...width)
+                location = CGPoint(x: randomX, y: -20)
+                
+                // Random horizontal movement
+                let randomEndX = randomX + CGFloat.random(in: -50...50)
+                let endLocation = CGPoint(x: randomEndX, y: height + 20)
+                
+                // Animation
+                withAnimation(.easeOut(duration: Double.random(in: 0.8...1.2))) { // Faster animation
+                    opacity = 1
+                    scale = CGFloat.random(in: 0.7...1.0)
+                }
+                
+                // Falling animation
+                withAnimation(
+                    Animation
+                        .easeIn(duration: Double.random(in: 0.6...1.2)) // Faster falling
+                        .delay(Double.random(in: 0...0.2)) // Shorter delay
+                ) {
+                    location = endLocation
+                }
+                
+                // Rotation animation
+                withAnimation(
+                    Animation
+                        .linear(duration: Double.random(in: 0.6...1.0)) // Faster rotation
+                        .delay(Double.random(in: 0...0.2)) // Shorter delay
+                        .repeatCount(3, autoreverses: false) // Add rotation repetition
+                ) {
+                    rotation = Double.random(in: 360...720) // More rotation
+                }
+                
+                // Fade out at the end
+                withAnimation(
+                    Animation
+                        .easeOut(duration: 0.3)
+                        .delay(1.0) // Shorter delay before fade out
+                ) {
+                    opacity = 0
+                }
+            }
+    }
+}
+
 extension Color {
     static var random: Color {
         let colors: [Color] = [.red, .orange, .yellow, .green, .blue, .purple, .pink]
@@ -118,7 +236,7 @@ extension Color {
 
 // Preview
 #Preview {
-    // 미리보기용 데이터 생성
+    // Sample data for preview
     let previewGoals = Goals()
     previewGoals.items = [
         GoalItem(title: "Morning Exercise", days: 0, isDone: true),

@@ -4,9 +4,14 @@
 //
 //  Created by Seah Park on 4/19/25.
 //
-// TODO: days0 됬을 때 나는 에러 수정
 
 import SwiftUI
+
+extension Collection {
+    subscript(safe index: Index) -> Element? {
+        return indices.contains(index) ? self[index] : nil
+    }
+}
 
 struct GoalItem: Identifiable, Codable {
     var id = UUID()
@@ -60,11 +65,11 @@ struct ContentView: View {
                             .font(.system(size: 70))
                             .foregroundColor(.gray.opacity(0.5))
                         
-                        Text("목표를 추가해주세요")
+                        Text("Please add a goal")
                             .font(.headline)
                             .foregroundColor(.gray)
                         
-                        Text("편집 버튼을 눌러 새로운 목표를 추가하세요")
+                        Text("Tap the edit button down below to create a new goal")
                             .font(.subheadline)
                             .foregroundColor(.gray)
                             .multilineTextAlignment(.center)
@@ -72,12 +77,9 @@ struct ContentView: View {
                     }
                     .padding(.vertical, 50)
                 } else {
-                    // 안전한 탭 인덱스 계산 (범위를 벗어나지 않도록)
-                    let safeTabIndex = min(selectedTab, activeGoals.count - 1)
-                    
                     Picker("Tab", selection: $selectedTab) {
-                        ForEach(activeGoals.indices, id: \.self) { index in
-                            Text(activeGoals[index].title).tag(index)
+                        ForEach(Array(activeGoals.enumerated()), id: \.offset) { index, goal in
+                            Text(goal.title).tag(index)
                         }
                     }
                     .pickerStyle(SegmentedPickerStyle())
@@ -85,70 +87,68 @@ struct ContentView: View {
                     .id(activeGoals.count) // 목표 개수가 변경될 때 Picker 새로고침
                     
                     // 목표 정보와 버튼 표시
-                    let goalToShow = activeGoals[safeTabIndex]
-                    let isTappable = canTapToday(lastTappedDate: goalToShow.lastTappedDate)
-                    
-                    let columns = [GridItem(.fixed(50)), GridItem(.fixed(50)), GridItem(.fixed(50)), GridItem(.fixed(50)), GridItem(.fixed(50))]
-                    
-                    Button(action: {
-                        guard isTappable else { return }
+                    if let goalToShow = activeGoals[safe: selectedTab] {
+                        let isTappable = canTapToday(lastTappedDate: goalToShow.lastTappedDate)
                         
-                        // 햅틱 피드백 생성
-                        let impactMed = UIImpactFeedbackGenerator(style: .medium)
-                        impactMed.impactOccurred()
+                        let columns = [GridItem(.fixed(50)), GridItem(.fixed(50)), GridItem(.fixed(50)), GridItem(.fixed(50)), GridItem(.fixed(50))]
+                        
+                        Button(action: {
+                            guard isTappable else { return }
 
-                        // 원본 배열에서 항목 찾아 업데이트
-                        if let originalIndex = goals.items.firstIndex(where: { $0.id == goalToShow.id }) {
-                            goals.items[originalIndex].lastTappedDate = Date()
-                            goals.items[originalIndex].days -= 1
-                            
-                            // 모든 목표가 완료되면 selectedTab 재설정 및 알림 표시
-                            if goals.items[originalIndex].days == 0 {
-                                completedGoalTitle = goals.items[originalIndex].title
-                                showCompletionAlert = true
-                                
-                                DispatchQueue.main.async {
-                                    // 이미 여기서 목표가 완료되어 activeGoals 배열에서 제거됨
-                                    // 아주 안전하게 선택된 탭을 재설정
-                                    if activeGoals.isEmpty {
-                                        selectedTab = 0
-                                    } else {
-                                        selectedTab = min(selectedTab, activeGoals.count - 1)
-                                    }
+                            let impactMed = UIImpactFeedbackGenerator(style: .medium)
+                            impactMed.impactOccurred()
+
+                            if let originalIndex = goals.items.firstIndex(where: { $0.id == goalToShow.id }) {
+                                goals.items[originalIndex].lastTappedDate = Date()
+                                goals.items[originalIndex].days -= 1
+
+                                if goals.items[originalIndex].days == 0 {
+                                    completedGoalTitle = goals.items[originalIndex].title
+                                    showCompletionAlert = true
+                                    
+                                    // 특별한 진동 패턴 실행 - "딴딴 딴 딴딴" 패턴으로 5번
+                                    playCompletionHaptic()
+
+                                    // 목표 사라지기 전에 탭 인덱스 조정
+                                    let nextCount = activeGoals.count - 1
+                                    selectedTab = max(0, min(selectedTab, nextCount - 1))
                                 }
                             }
-                        }
-                    }) {
-                        LazyVGrid(columns: columns, spacing: 10) {
-                            ForEach(0..<goalToShow.days, id: \.self) { _ in
-                                Rectangle()
-                                    .fill(Color.blue)
-                                    .frame(height: 50)
-                                    .cornerRadius(5)
+                        }) {
+                            LazyVGrid(columns: columns, spacing: 10) {
+                                ForEach(0..<goalToShow.days, id: \.self) { _ in
+                                    Rectangle()
+                                        .fill(Color.blue)
+                                        .frame(height: 50)
+                                        .cornerRadius(5)
+                                }
                             }
+                            .opacity(isTappable ? 1.0 : 0.5)
                         }
-                        .opacity(isTappable ? 1.0 : 0.5)
-                    }
-                    .disabled(!isTappable)
-                    
-                    if isTappable {
-                        Text("\(goalToShow.days)일 남았습니다")
-                            .padding()
+                        .disabled(!isTappable)
+                        
+                        if isTappable {
+                            Text("\(goalToShow.days) days left").padding()
+                        } else {
+                            Text("\(goalToShow.days) days left").padding(.top)
+                            Text("Good job! You've already completed this task today. Come back tomorrow!")
+                                .foregroundColor(.gray)
+                                .padding()
+                        }
                     } else {
-                        Text("\(goalToShow.days)일 남았습니다").padding(.top)
-                        Text("오늘은 이미 완료했습니다. 내일 다시 도전하세요!")
+                        Text("Unable to load goal.")
                             .foregroundColor(.gray)
                             .padding()
                     }
                 }
             }
             .navigationTitle(activeGoals.isEmpty ? "Goal Chaser" :
-                           (activeGoals.indices.contains(selectedTab) ? activeGoals[selectedTab].title : "Goal Chaser"))
+                (activeGoals.indices.contains(selectedTab) ? activeGoals[selectedTab].title : "Goal Chaser"))
             .alert(isPresented: $showCompletionAlert) {
                 Alert(
-                    title: Text("🎉 목표 달성 축하합니다! 🎉"),
-                    message: Text("\(completedGoalTitle) 목표를 성공적으로 완료했어요!\n당신의 노력과 끈기에 박수를 보냅니다."),
-                    dismissButton: .default(Text("확인"))
+                    title: Text("🎉 Congratulations on Achieving Your Goal! 🎉"),
+                    message: Text("You successfully completed the goal: \(completedGoalTitle)\nYour effort and persistence are truly impressive."),
+                    dismissButton: .default(Text("OK"))
                 )
             }
             
@@ -190,6 +190,36 @@ struct ContentView: View {
         
         // 마지막 탭한 날짜와 현재 날짜가 다른 날인지 확인
         return !calendar.isDate(lastTapped, inSameDayAs: now)
+    }
+    
+    // "딴딴 딴 딴딴" 패턴으로 진동 효과 재생
+    func playCompletionHaptic() {
+        // 성공 알림 진동
+        let notificationFeedback = UINotificationFeedbackGenerator()
+        notificationFeedback.notificationOccurred(.success)
+        
+        // "딴딴 딴 딴딴" 패턴으로 5번 진동 (강, 강, 약, 강, 강)
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+            let heavy = UIImpactFeedbackGenerator(style: .heavy)
+            heavy.impactOccurred() // 강
+            
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) {
+                heavy.impactOccurred() // 강
+                
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) {
+                    let light = UIImpactFeedbackGenerator(style: .light)
+                    light.impactOccurred() // 약
+                    
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) {
+                        heavy.impactOccurred() // 강
+                        
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) {
+                            heavy.impactOccurred() // 강
+                        }
+                    }
+                }
+            }
+        }
     }
 }
 
