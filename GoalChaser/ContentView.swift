@@ -4,6 +4,8 @@
 //
 //  Created by Seah Park on 4/19/25.
 //
+// TODO: daily acheive ment / miss / acheive / calender style
+// 노트북 백그라운드 추가하기. 귀여울듯
 
 import SwiftUI
 
