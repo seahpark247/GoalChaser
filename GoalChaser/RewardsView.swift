@@ -71,6 +71,14 @@ struct RewardsView: View {
                                         .foregroundColor(.yellow)
                                 }
                                 .padding(.vertical, 8)
+                                .swipeActions(edge: .trailing) {
+                                    Button(role: .destructive) {
+                                        // 목표 삭제 함수 호출
+                                        deleteGoal(goal)
+                                    } label: {
+                                        Label("Delete", systemImage: "trash")
+                                    }
+                                }
                             }
                         }
                     }
@@ -86,6 +94,7 @@ struct RewardsView: View {
                         } else {
                             rewardMessage = "You're amazing!" // 기본 메시지
                         }
+                        playRewardHaptic()
                         showRewardAlert = true
                     }
                     .foregroundColor(.blue)
@@ -115,12 +124,38 @@ struct RewardsView: View {
             }
             .overlay(
                 ZStack {
-                    if showConfetti {
+                    if showConfetti && !completedGoals.isEmpty {
                         ConfettiView()
                             .edgesIgnoringSafeArea(.all)
                     }
                 }
             )
+        }
+    }
+    
+    // 완료된 목표 삭제 함수
+    private func deleteGoal(_ goal: GoalItem) {
+        // 항목 인덱스 찾기
+        if let index = goals.items.firstIndex(where: { $0.id == goal.id }) {
+            // 목록에서 항목 삭제
+            goals.items.remove(at: index)
+            
+            // UserDefaults에 업데이트된 데이터 저장
+            saveGoalsToUserDefaults()
+        }
+    }
+    
+    // UserDefaults에 목표 데이터 저장
+    private func saveGoalsToUserDefaults() {
+        do {
+            // GoalItem을 Data로 인코딩
+            let encoder = JSONEncoder()
+            let data = try encoder.encode(goals.items)
+            
+            // UserDefaults에 저장
+            UserDefaults.standard.set(data, forKey: "savedGoals")
+        } catch {
+            print("목표 저장 오류: \(error.localizedDescription)")
         }
     }
     
@@ -138,6 +173,23 @@ struct RewardsView: View {
             self.rewardMessages = jsonData.messages
         } catch {
             print("JSON 파일 로드 오류: \(error.localizedDescription)")
+        }
+    }
+    
+    func playRewardHaptic() {
+        // 성공 알림 진동
+        let notificationFeedback = UINotificationFeedbackGenerator()
+        notificationFeedback.notificationOccurred(.success)
+        
+        // "딴딴" 패턴으로 2번 진동 (강, 약)
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+            let heavy = UIImpactFeedbackGenerator(style: .heavy)
+            heavy.impactOccurred() // 강
+            
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) {
+                let light = UIImpactFeedbackGenerator(style: .light)
+                light.impactOccurred() // 약
+            }
         }
     }
 }
