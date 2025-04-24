@@ -131,7 +131,7 @@ struct ContentView: View {
                             Text("\(goalToShow.days) days left").padding()
                         } else {
                             Text("\(goalToShow.days) days left").padding(.top)
-                            Text("Good job! You've already completed this task today. Come back tomorrow!")
+                            Text("Good job! Come back tomorrow!")
                                 .foregroundColor(.gray)
                                 .padding()
                         }

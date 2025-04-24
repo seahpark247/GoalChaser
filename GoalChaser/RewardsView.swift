@@ -38,7 +38,7 @@ struct RewardsView: View {
                             .font(.headline)
                             .foregroundColor(.gray)
                         
-                        Text("Achieve your goals to earn trophies!")
+                        Text("Achieve your goals to evaluate your life better!")
                             .font(.subheadline)
                             .foregroundColor(.gray)
                             .multilineTextAlignment(.center)
@@ -87,18 +87,20 @@ struct RewardsView: View {
             .navigationTitle("My Achievements")
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
-                    Button("Secret Reward") {
-                        // 랜덤 응원 메시지 선택
-                        if !rewardMessages.isEmpty {
-                            rewardMessage = rewardMessages.randomElement() ?? "You're amazing!"
-                        } else {
-                            rewardMessage = "You're amazing!" // 기본 메시지
+                    if !completedGoals.isEmpty {
+                        Button("Secret Reward") {
+                            // 랜덤 응원 메시지 선택
+                            if !rewardMessages.isEmpty {
+                                rewardMessage = rewardMessages.randomElement() ?? "You're amazing!"
+                            } else {
+                                rewardMessage = "You're amazing!" // 기본 메시지
+                            }
+                            playRewardHaptic()
+                            showRewardAlert = true
                         }
-                        playRewardHaptic()
-                        showRewardAlert = true
+                        .foregroundColor(.blue)
+                        .font(.headline)
                     }
-                    .foregroundColor(.blue)
-                    .font(.headline)
                 }
             }
             .alert(isPresented: $showRewardAlert) {
