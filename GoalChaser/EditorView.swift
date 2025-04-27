@@ -26,7 +26,7 @@ struct EditorView: View {
     var body: some View {
         NavigationStack {
             ZStack {
-                Image("notepadBackground")
+                Image("bg_notepad")
                     .resizable()
                     .overlay(Color.black.opacity(0.08))
                     .edgesIgnoringSafeArea(.all)

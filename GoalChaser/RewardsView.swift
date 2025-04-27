@@ -27,111 +27,120 @@ struct RewardsView: View {
     
     var body: some View {
         NavigationStack {
-            VStack {
-                if completedGoals.isEmpty {
-                    VStack(spacing: 20) {
-                        Image(systemName: "trophy.fill")
-                            .font(.system(size: 70))
-                            .foregroundColor(.gray.opacity(0.5))
-                        
-                        Text("Completed goals will appear here.")
-                            .font(.headline)
-                            .foregroundColor(.gray)
-                        
-                        Text("Achieve your goals to evaluate your life better!")
-                            .font(.subheadline)
-                            .foregroundColor(.gray)
-                            .multilineTextAlignment(.center)
-                            .padding(.horizontal)
-                    }
-                    .padding(.vertical, 50)
-                } else {
-                    List {
-                        Section(header: Text("Achievement Statistics").font(.headline)) {
-                            HStack {
-                                Text("Completed Goals")
-                                Spacer()
-                                Text("\(completedGoals.count)")
-                                    .fontWeight(.bold)
-                            }
+            ZStack {
+                Image("bg_gold")
+                    .resizable()
+                    .overlay(Color.black.opacity(0.08))
+                    .edgesIgnoringSafeArea(.all)
+                
+                VStack {
+                    if completedGoals.isEmpty {
+                        VStack(spacing: 20) {
+                            Image(systemName: "trophy.fill")
+                                .font(.system(size: 70))
+                                .foregroundColor(.gray.opacity(0.5))
+                            
+                            Text("Completed goals will appear here.")
+                                .font(.headline)
+                                .foregroundColor(.gray)
+                            
+                            Text("Achieve your goals to evaluate your life better!")
+                                .font(.subheadline)
+                                .foregroundColor(.gray)
+                                .multilineTextAlignment(.center)
+                                .padding(.horizontal)
                         }
-
-                        Section(header: Text("Completed Goals").font(.headline)) {
-                            ForEach(completedGoals) { goal in
+                        .padding(.vertical, 50)
+                    } else {
+                        List {
+                            Section(header: Text("Achievement Statistics").font(.headline)) {
                                 HStack {
-                                    Image(systemName: "checkmark.circle.fill")
-                                        .foregroundColor(.green)
-                                    
-                                    Text(goal.title)
-                                        .strikethrough()
-                                    
+                                    Text("Completed Goals")
                                     Spacer()
-                                    
-                                    Image(systemName: "trophy.fill")
-                                        .foregroundColor(.yellow)
+                                    Text("\(completedGoals.count)")
+                                        .fontWeight(.bold)
                                 }
-                                .padding(.vertical, 8)
-                                .swipeActions(edge: .trailing) {
-                                    Button(role: .destructive) {
-                                        // 목표 삭제 함수 호출
-                                        deleteGoal(goal)
-                                    } label: {
-                                        Label("Delete", systemImage: "trash")
+                            }
+                            
+                            Section(header: Text("Completed Goals").font(.headline)) {
+                                ForEach(completedGoals) { goal in
+                                    HStack {
+                                        Image(systemName: "checkmark.circle.fill")
+                                            .foregroundColor(.green)
+                                        
+                                        Text(goal.title)
+                                            .strikethrough()
+                                        
+                                        Spacer()
+                                        
+                                        Image(systemName: "trophy.fill")
+                                            .foregroundColor(.yellow)
+                                    }
+                                    .padding(.vertical, 8)
+                                    .swipeActions(edge: .trailing) {
+                                        Button(role: .destructive) {
+                                            // 목표 삭제 함수 호출
+                                            deleteGoal(goal)
+                                        } label: {
+                                            Label("Delete", systemImage: "trash")
+                                        }
                                     }
                                 }
                             }
                         }
                     }
                 }
-            }
-            .navigationTitle("My Achievements")
-            .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    if !completedGoals.isEmpty {
-                        Button("Secret Reward") {
-                            // 랜덤 응원 메시지 선택
-                            if !rewardMessages.isEmpty {
-                                rewardMessage = rewardMessages.randomElement() ?? "You're amazing!"
-                            } else {
-                                rewardMessage = "You're amazing!" // 기본 메시지
+                .navigationTitle("My Achievements")
+                .scrollContentBackground(.hidden)
+                .toolbar {
+                    ToolbarItem(placement: .navigationBarTrailing) {
+                        if !completedGoals.isEmpty {
+                            Button("Secret Reward") {
+                                // 랜덤 응원 메시지 선택
+                                if !rewardMessages.isEmpty {
+                                    rewardMessage = rewardMessages.randomElement() ?? "You're amazing!"
+                                } else {
+                                    rewardMessage = "You're amazing!" // 기본 메시지
+                                }
+                                playRewardHaptic()
+                                showRewardAlert = true
                             }
-                            playRewardHaptic()
-                            showRewardAlert = true
+                            .foregroundColor(.blue)
+                            .font(.headline)
                         }
-                        .foregroundColor(.blue)
-                        .font(.headline)
                     }
                 }
-            }
-            .alert(isPresented: $showRewardAlert) {
-                Alert(
-                    title: Text("✨ Look at YOU!!! ✨"),
-                    message: Text(rewardMessage),
-                    dismissButton: .default(Text("Thank you!"))
-                )
-            }
-            .onAppear {
-                // 메시지 로드
-                loadEncouragementMessages()
-                
-                if !completedGoals.isEmpty {
-                    // Show confetti immediately with no delay
-                    showConfetti = true
+                .alert(isPresented: $showRewardAlert) {
+                    Alert(
+                        title: Text("✨ Look at YOU!!! ✨"),
+                        message: Text(rewardMessage),
+                        dismissButton: .default(Text("Thank you!"))
+                    )
+                }
+                .onAppear {
+                    // 메시지 로드
+                    loadEncouragementMessages()
                     
-                    // Hide confetti after 2 seconds
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
-                        showConfetti = false
+                    if !completedGoals.isEmpty {
+                        // Show confetti immediately with no delay
+                        showConfetti = true
+                        
+                        // Hide confetti after 2 seconds
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
+                            showConfetti = false
+                        }
                     }
                 }
+                .overlay(
+                    ZStack {
+                        if showConfetti && !completedGoals.isEmpty {
+                            ConfettiView()
+                                .edgesIgnoringSafeArea(.all)
+                        }
+                    }
+                )
+                
             }
-            .overlay(
-                ZStack {
-                    if showConfetti && !completedGoals.isEmpty {
-                        ConfettiView()
-                            .edgesIgnoringSafeArea(.all)
-                    }
-                }
-            )
         }
     }
     
