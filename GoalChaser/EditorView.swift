@@ -25,67 +25,76 @@ struct EditorView: View {
     
     var body: some View {
         NavigationStack {
-            Form {
-                Section {
-                    TextField("Input Your Goal", text: $inputGoal).disabled(inputDisabled)
-                    
-                    // Day picker
-                    ZStack {
-                        Picker("Days you want to achieve", selection: $selectedDays) {
-                            ForEach(1...31, id: \.self) { day in
-                                Text("\(day)").tag(day)
-                            }
-                        }
-                        .disabled(inputDisabled)
-                        .opacity(inputDisabled ? 0.5 : 1)
-                        
-                        // inputDisabled일 때만 나타나는 투명한 오버레이
-                        if inputDisabled {
-                            Rectangle()
-                                .fill(Color.clear)  // 투명
-                                .contentShape(Rectangle())  // 전체 영역이 탭 가능하도록
-                                .onTapGesture {} // 빈 탭 제스처로 기본 동작 차단
-                        }
-                    }
+            ZStack {
+                Image("notepadBackground")
+                    .resizable()
+                    .overlay(Color.black.opacity(0.08))
+                    .edgesIgnoringSafeArea(.all)
 
-                    
-                    Button(action: {addGoal()}) {
-                        HStack() {
-                            Spacer()
-                            Image(systemName: "plus").foregroundColor(!inputDisabled ? .blue : .gray)
-                            Spacer()
-                        }
-                    }
-                }
-                
-                if !activeGoals.isEmpty {
+                List {
                     Section {
-                        ForEach(activeGoals) { goal in
-                            HStack {
-                                // 인덱스 대신 실제 활성 목표의 인덱스 계산
-                                if let index = activeGoals.firstIndex(where: { $0.id == goal.id }) {
-                                    Image(systemName: "\(index + 1).circle")
-                                    Text(goal.title)
-                                    Spacer()
-                                    Text("Day \(goal.days)")
+                        TextField("Input Your Goal", text: $inputGoal).disabled(inputDisabled)
+                        
+                        // Day picker
+                        ZStack {
+                            Picker("Days you want to achieve", selection: $selectedDays) {
+                                ForEach(1...31, id: \.self) { day in
+                                    Text("\(day)").tag(day)
                                 }
                             }
-                            .swipeActions {
-                                Button(role: .destructive) {
-                                    if let index = goals.items.firstIndex(where: { $0.id == goal.id }) {
-                                        goals.items.remove(at: index)
+                            .disabled(inputDisabled)
+                            .opacity(inputDisabled ? 0.5 : 1)
+                            
+                            // inputDisabled일 때만 나타나는 투명한 오버레이
+                            if inputDisabled {
+                                Rectangle()
+                                    .fill(Color.clear)  // 투명
+                                    .contentShape(Rectangle())  // 전체 영역이 탭 가능하도록
+                                    .onTapGesture {} // 빈 탭 제스처로 기본 동작 차단
+                            }
+                        }
+                        
+                        
+                        Button(action: {addGoal()}) {
+                            HStack() {
+                                Spacer()
+                                Image(systemName: "plus").foregroundColor(!inputDisabled ? .blue : .gray)
+                                Spacer()
+                            }
+                        }
+                    }
+                    
+                    if !activeGoals.isEmpty {
+                        Section {
+                            ForEach(activeGoals) { goal in
+                                HStack {
+                                    // 인덱스 대신 실제 활성 목표의 인덱스 계산
+                                    if let index = activeGoals.firstIndex(where: { $0.id == goal.id }) {
+                                        Image(systemName: "\(index + 1).circle")
+                                        Text(goal.title)
+                                        Spacer()
+                                        Text("Day \(goal.days)")
                                     }
-                                } label: {
-                                    Label("Delete", systemImage: "trash")
+                                }
+                                .swipeActions {
+                                    Button(role: .destructive) {
+                                        if let index = goals.items.firstIndex(where: { $0.id == goal.id }) {
+                                            goals.items.remove(at: index)
+                                        }
+                                    } label: {
+                                        Label("Delete", systemImage: "trash")
+                                    }
                                 }
                             }
                         }
                     }
                 }
-            }
-            .navigationTitle("Editor")
-            .alert(inputDisabled ? "You've reached 5 goals limit." : "Input your goal!", isPresented: $showAlert) {
-                Button("OK", role: .cancel) { }
+                .scrollContentBackground(.hidden)
+                .navigationTitle("Editor")
+                .alert(inputDisabled ? "You've reached 5 goals limit." : "Input your goal!", isPresented: $showAlert) {
+                    Button("OK", role: .cancel) { }
+                }
+            
             }
         }
     }
