@@ -8,10 +8,14 @@
 import SwiftUI
 
 struct EditorView: View {
+    @Environment(\.colorScheme) var colorScheme
+
     @Bindable var goals: Goals
     @State private var inputGoal: String = ""
     @State private var showAlert = false
     @State private var selectedDays: Int = 7 // Default value of 7
+    
+    let colorList = ["red", "orange", "yellow", "green", "blue", "purple"]
     
     // 완료되지 않은 목표만 필터링하는 계산 속성
     var activeGoals: [GoalItem] {
@@ -28,7 +32,7 @@ struct EditorView: View {
             ZStack {
                 Image("bg_notepad")
                     .resizable()
-                    .overlay(Color.black.opacity(0.08))
+                    .overlay(Color.black.opacity(colorScheme == .dark ? 0.75 : 0.08))
                     .edgesIgnoringSafeArea(.all)
 
                 List {
@@ -53,12 +57,20 @@ struct EditorView: View {
                                     .onTapGesture {} // 빈 탭 제스처로 기본 동작 차단
                             }
                         }
-                        
-                        
-                        Button(action: {addGoal()}) {
-                            HStack() {
-                                Spacer()
-                                Image(systemName: "plus").foregroundColor(!inputDisabled ? .blue : .gray)
+                                                
+                        HStack {
+                            Spacer()
+                            ForEach(colorList, id: \.self) { color in
+                                // 임시 GoalItem을 만들어 uiColor 접근
+                                let tempGoalItem = GoalItem(title: "", days: 0, color: color)
+                                Button(action: {addGoal(color)}) {
+                                    Rectangle()
+                                        .fill(!inputDisabled ? tempGoalItem.uiColor : .gray)
+                                        .frame(width: 35, height: 35)
+                                        .cornerRadius(5)
+                                }
+                                .buttonStyle(PlainButtonStyle())
+                                
                                 Spacer()
                             }
                         }
@@ -73,7 +85,7 @@ struct EditorView: View {
                                         Image(systemName: "\(index + 1).circle")
                                         Text(goal.title)
                                         Spacer()
-                                        Text("Day \(goal.days)")
+                                        Text("Day \(goal.days)").foregroundColor(goal.uiColor)
                                     }
                                 }
                                 .swipeActions {
@@ -99,9 +111,10 @@ struct EditorView: View {
         }
     }
     
-    func addGoal() {
+    func addGoal(_ color: String) {
         guard !inputDisabled else {
-            return showAlert = true
+            showAlert = true
+            return
         }
         guard !inputGoal.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
             showAlert = true
@@ -109,7 +122,7 @@ struct EditorView: View {
             return
         }
         
-        goals.items.append(GoalItem(title: inputGoal, days: selectedDays))
+        goals.items.append(GoalItem(title: inputGoal, days: selectedDays, color: color))
         inputGoal = ""
         selectedDays = 7
     }

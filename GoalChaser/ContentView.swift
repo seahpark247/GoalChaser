@@ -17,11 +17,28 @@ extension Collection {
 struct GoalItem: Identifiable, Codable {
     var id = UUID()
     var title: String
-    var days: Int = 30
-    var color = "Blue"
-    var buttonShape = "Square"
+    var days: Int = 31
+    var color = "blue"
     var isDone: Bool = false
     var lastTappedDate: Date? = nil // 마지막으로 탭한 날짜 저장
+    
+    enum CodingKeys: String, CodingKey {
+        case id, title, days, color, isDone, lastTappedDate
+    }
+    
+    // Color는 Codable이 아니므로 계산 프로퍼티로 제공
+    var uiColor: Color {
+        switch color {
+        case "red": return .red
+        case "orange": return .orange
+        case "yellow": return .yellow
+        case "green": return .green
+        case "blue": return .blue
+        case "purple": return .purple
+        default: return .blue
+        }
+    }
+    
 }
 
 @Observable
@@ -100,6 +117,7 @@ struct ContentView: View {
                             impactMed.impactOccurred()
 
                             if let originalIndex = goals.items.firstIndex(where: { $0.id == goalToShow.id }) {
+                                
                                 goals.items[originalIndex].lastTappedDate = Date()
                                 goals.items[originalIndex].days -= 1
 
@@ -119,7 +137,7 @@ struct ContentView: View {
                             LazyVGrid(columns: columns, spacing: 10) {
                                 ForEach(0..<goalToShow.days, id: \.self) { _ in
                                     Rectangle()
-                                        .fill(Color.blue)
+                                        .fill(goalToShow.uiColor)
                                         .frame(height: 50)
                                         .cornerRadius(5)
                                 }

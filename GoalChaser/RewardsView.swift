@@ -13,6 +13,8 @@ struct RewardMessages: Codable {
 }
 
 struct RewardsView: View {
+    @Environment(\.colorScheme) var colorScheme
+    
     @State var goals: Goals
     @State private var showConfetti = false
     @State private var showRewardAlert = false
@@ -30,7 +32,7 @@ struct RewardsView: View {
             ZStack {
                 Image("bg_gold")
                     .resizable()
-                    .overlay(Color.black.opacity(0.08))
+                    .overlay(Color.black.opacity(colorScheme == .dark ? 0.75 : 0.08))
                     .edgesIgnoringSafeArea(.all)
                 
                 VStack {
@@ -42,11 +44,11 @@ struct RewardsView: View {
                             
                             Text("Completed goals will appear here.")
                                 .font(.headline)
-                                .foregroundColor(.gray)
+                                .foregroundColor(.black.opacity(0.5))
                             
                             Text("Achieve your goals to evaluate your life better!")
                                 .font(.subheadline)
-                                .foregroundColor(.gray)
+                                .foregroundColor(.black.opacity(0.6))
                                 .multilineTextAlignment(.center)
                                 .padding(.horizontal)
                         }
@@ -66,7 +68,7 @@ struct RewardsView: View {
                                 ForEach(completedGoals) { goal in
                                     HStack {
                                         Image(systemName: "checkmark.circle.fill")
-                                            .foregroundColor(.green)
+                                            .foregroundColor(colorScheme == .dark ? .gray : .black)
                                         
                                         Text(goal.title)
                                             .strikethrough()
@@ -74,7 +76,7 @@ struct RewardsView: View {
                                         Spacer()
                                         
                                         Image(systemName: "trophy.fill")
-                                            .foregroundColor(.yellow)
+                                            .foregroundColor(goal.uiColor)
                                     }
                                     .padding(.vertical, 8)
                                     .swipeActions(edge: .trailing) {
