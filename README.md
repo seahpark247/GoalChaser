@@ -15,24 +15,30 @@
 Here are a few screenshots from the app:
 
 ### Main Page:
+<div style="display: flex; justify-content: space-between;">
 <img src="./images/main_page_screenshot.png" height="400" alt="Main Page">
 <img src="./images/main_page_screenshot2.png" height="400" alt="Main Page">
 <img src="./images/main_page_screenshot3.png" height="400" alt="Main Page">
-
-### My Achievements Page:
-<img src="./images/my_achievements_screenshot.png" height="400" alt="My Achievements">
-<img src="./images/my_achievements_screenshot2.png" height="400" alt="My Achievements">
-<img src="./images/my_achievements_screenshot3.png" height="400" alt="My Achievements">
+</div>
 
 ### Editor Page:
+<div style="display: flex; justify-content: space-between;">
 <img src="./images/editor_page_screenshot.png" height="400" alt="Editor Page">
 <img src="./images/editor_page_screenshot2.png" height="400" alt="Editor Page">
+<img src="./images/editor_page_screenshot3.png" height="400" alt="Editor Page">
+</div>
+
+### My Achievements Page:
+<div style="display: flex; justify-content: space-between;">
+<img src="./images/my_achievements_screenshot.png" height="400" alt="My Achievements">
+<img src="./images/my_achievements_screenshot2.png" height="400" alt="My Achievements">
+</div>
 
 ## Pages
 
 1. **Main Page**: Displays all the goals you've set. You can mark tasks as complete each day by clicking on them.
-2. **My Achievements Page**: Once goals are completed, they move here so you can track your accomplishments.
-3. **Editor Page**: This page allows you to create new goals, modify existing ones, and mark goals as completed.
+2. **Editor Page**: This page allows you to create new goals, modify existing ones, and mark goals as completed.
+3. **My Achievements Page**: Once goals are completed, they move here so you can track your accomplishments.
 
 ## Motivation for Students
 
