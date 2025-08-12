@@ -1,6 +1,6 @@
 # Goal Chaser
 
-<img src="./images/app_icon.png" height="120" alt="App Icon"> <!-- 아이콘 크기를 120px로 설정 -->
+<img src="./images/app_icon.png" height="100" alt="App Icon">
 
 **Goal Chaser** is an iOS app designed to help students stay motivated and organized by setting, tracking, and achieving their goals. Unlike typical to-do list apps, **Goal Chaser** encourages long-term habit formation by helping users set goals and track progress over time, creating a rewarding experience for achieving small milestones along the way.
 
