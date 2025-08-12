@@ -30,8 +30,8 @@
             filePath = "GoalChaser/ContentView.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "17"
-            endingLineNumber = "17"
+            startingLineNumber = "15"
+            endingLineNumber = "15"
             landmarkName = "GoalItem"
             landmarkType = "14">
          </BreakpointContent>
