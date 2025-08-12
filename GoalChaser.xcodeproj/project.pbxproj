@@ -24,9 +24,14 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		110C8C182E4ABC6D00B8DDDA /* editor_page_screenshot.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = editor_page_screenshot.png; sourceTree = "<group>"; };
-		110C8C192E4ABC6D00B8DDDA /* main_page_screenshot.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = main_page_screenshot.png; sourceTree = "<group>"; };
-		110C8C1A2E4ABC6D00B8DDDA /* my_achievements_screenshot.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = my_achievements_screenshot.png; sourceTree = "<group>"; };
+		110C8C232E4AC06D00B8DDDA /* editor_page_screenshot.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = editor_page_screenshot.png; sourceTree = "<group>"; };
+		110C8C242E4AC06D00B8DDDA /* editor_page_screenshot2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = editor_page_screenshot2.png; sourceTree = "<group>"; };
+		110C8C252E4AC06D00B8DDDA /* editor_page_screenshot3.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = editor_page_screenshot3.png; sourceTree = "<group>"; };
+		110C8C262E4AC06D00B8DDDA /* main_page_screenshot.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = main_page_screenshot.png; sourceTree = "<group>"; };
+		110C8C272E4AC06D00B8DDDA /* main_page_screenshot2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = main_page_screenshot2.png; sourceTree = "<group>"; };
+		110C8C282E4AC06D00B8DDDA /* main_page_screenshot3.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = main_page_screenshot3.png; sourceTree = "<group>"; };
+		110C8C292E4AC06D00B8DDDA /* my_achievements_screenshot.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = my_achievements_screenshot.png; sourceTree = "<group>"; };
+		110C8C2A2E4AC06D00B8DDDA /* my_achievements_screenshot2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = my_achievements_screenshot2.png; sourceTree = "<group>"; };
 		11A724B82DB487B5001FF7CE /* GoalChaser.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; name = GoalChaser.app; path = "/Users/seah/development/playground/Toy/GoalChaser/build/Debug-iphoneos/GoalChaser.app"; sourceTree = "<absolute>"; };
 		11A724C82DB487B6001FF7CE /* GoalChaserTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; name = GoalChaserTests.xctest; path = "/Users/seah/development/playground/Toy/GoalChaser/build/Debug-iphoneos/GoalChaser.app/PlugIns/GoalChaserTests.xctest"; sourceTree = "<absolute>"; };
 		11A724D22DB487B6001FF7CE /* GoalChaserUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; name = GoalChaserUITests.xctest; path = "/Users/seah/development/playground/Toy/GoalChaser/build/Debug-iphoneos/GoalChaserUITests-Runner.app/PlugIns/GoalChaserUITests.xctest"; sourceTree = "<absolute>"; };
@@ -78,9 +83,14 @@
 		110C8C172E4AB97400B8DDDA /* images */ = {
 			isa = PBXGroup;
 			children = (
-				110C8C182E4ABC6D00B8DDDA /* editor_page_screenshot.png */,
-				110C8C192E4ABC6D00B8DDDA /* main_page_screenshot.png */,
-				110C8C1A2E4ABC6D00B8DDDA /* my_achievements_screenshot.png */,
+				110C8C232E4AC06D00B8DDDA /* editor_page_screenshot.png */,
+				110C8C242E4AC06D00B8DDDA /* editor_page_screenshot2.png */,
+				110C8C252E4AC06D00B8DDDA /* editor_page_screenshot3.png */,
+				110C8C262E4AC06D00B8DDDA /* main_page_screenshot.png */,
+				110C8C272E4AC06D00B8DDDA /* main_page_screenshot2.png */,
+				110C8C282E4AC06D00B8DDDA /* main_page_screenshot3.png */,
+				110C8C292E4AC06D00B8DDDA /* my_achievements_screenshot.png */,
+				110C8C2A2E4AC06D00B8DDDA /* my_achievements_screenshot2.png */,
 			);
 			path = images;
 			sourceTree = "<group>";
