@@ -15,13 +15,13 @@
 Here are a few screenshots from the app:
 
 ### Main Page:
-![Main Page](./images/main_page_screenshot.png)
+<img src="./images/main_page_screenshot.png" height="300" alt="Main Page">
 
 ### My Achievements Page:
-![My Achievements](./images/my_achievements_screenshot.png)
+<img src="./images/my_achievements_screenshot.png" height="300" alt="My Achievements">
 
 ### Editor Page:
-![Editor Page](./images/editor_page_screenshot.png)
+<img src="./images/editor_page_screenshot.png" height="300" alt="Editor Page">
 
 ## Pages
 
