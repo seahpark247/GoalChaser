@@ -32,9 +32,10 @@
 		110C8C282E4AC06D00B8DDDA /* main_page_screenshot3.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = main_page_screenshot3.png; sourceTree = "<group>"; };
 		110C8C292E4AC06D00B8DDDA /* my_achievements_screenshot.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = my_achievements_screenshot.png; sourceTree = "<group>"; };
 		110C8C2A2E4AC06D00B8DDDA /* my_achievements_screenshot2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = my_achievements_screenshot2.png; sourceTree = "<group>"; };
-		11A724B82DB487B5001FF7CE /* GoalChaser.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; name = GoalChaser.app; path = "/Users/seah/development/playground/Toy/GoalChaser/build/Debug-iphoneos/GoalChaser.app"; sourceTree = "<absolute>"; };
-		11A724C82DB487B6001FF7CE /* GoalChaserTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; name = GoalChaserTests.xctest; path = "/Users/seah/development/playground/Toy/GoalChaser/build/Debug-iphoneos/GoalChaser.app/PlugIns/GoalChaserTests.xctest"; sourceTree = "<absolute>"; };
-		11A724D22DB487B6001FF7CE /* GoalChaserUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; name = GoalChaserUITests.xctest; path = "/Users/seah/development/playground/Toy/GoalChaser/build/Debug-iphoneos/GoalChaserUITests-Runner.app/PlugIns/GoalChaserUITests.xctest"; sourceTree = "<absolute>"; };
+		110C8C5B2E4AC29700B8DDDA /* GoalChaser.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GoalChaser.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		110C8C5C2E4AC29700B8DDDA /* GoalChaserTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = GoalChaserTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		110C8C5D2E4AC29700B8DDDA /* GoalChaserUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = GoalChaserUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		110C8C732E4AC2AF00B8DDDA /* app_icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = app_icon.png; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -91,6 +92,7 @@
 				110C8C282E4AC06D00B8DDDA /* main_page_screenshot3.png */,
 				110C8C292E4AC06D00B8DDDA /* my_achievements_screenshot.png */,
 				110C8C2A2E4AC06D00B8DDDA /* my_achievements_screenshot2.png */,
+				110C8C732E4AC2AF00B8DDDA /* app_icon.png */,
 			);
 			path = images;
 			sourceTree = "<group>";
@@ -102,6 +104,9 @@
 				11A724CB2DB487B6001FF7CE /* GoalChaserTests */,
 				11A724D52DB487B6001FF7CE /* GoalChaserUITests */,
 				110C8C172E4AB97400B8DDDA /* images */,
+				110C8C5B2E4AC29700B8DDDA /* GoalChaser.app */,
+				110C8C5C2E4AC29700B8DDDA /* GoalChaserTests.xctest */,
+				110C8C5D2E4AC29700B8DDDA /* GoalChaserUITests.xctest */,
 			);
 			sourceTree = "<group>";
 		};
@@ -127,7 +132,7 @@
 			packageProductDependencies = (
 			);
 			productName = GoalChaser;
-			productReference = 11A724B82DB487B5001FF7CE /* GoalChaser.app */;
+			productReference = 110C8C5B2E4AC29700B8DDDA /* GoalChaser.app */;
 			productType = "com.apple.product-type.application";
 		};
 		11A724C72DB487B6001FF7CE /* GoalChaserTests */ = {
@@ -150,7 +155,7 @@
 			packageProductDependencies = (
 			);
 			productName = GoalChaserTests;
-			productReference = 11A724C82DB487B6001FF7CE /* GoalChaserTests.xctest */;
+			productReference = 110C8C5C2E4AC29700B8DDDA /* GoalChaserTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
 		11A724D12DB487B6001FF7CE /* GoalChaserUITests */ = {
@@ -173,7 +178,7 @@
 			packageProductDependencies = (
 			);
 			productName = GoalChaserUITests;
-			productReference = 11A724D22DB487B6001FF7CE /* GoalChaserUITests.xctest */;
+			productReference = 110C8C5D2E4AC29700B8DDDA /* GoalChaserUITests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
 		};
 /* End PBXNativeTarget section */
