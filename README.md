@@ -16,12 +16,17 @@ Here are a few screenshots from the app:
 
 ### Main Page:
 <img src="./images/main_page_screenshot.png" height="400" alt="Main Page">
+<img src="./images/main_page_screenshot2.png" height="400" alt="Main Page">
+<img src="./images/main_page_screenshot3.png" height="400" alt="Main Page">
 
 ### My Achievements Page:
 <img src="./images/my_achievements_screenshot.png" height="400" alt="My Achievements">
+<img src="./images/my_achievements_screenshot2.png" height="400" alt="My Achievements">
+<img src="./images/my_achievements_screenshot3.png" height="400" alt="My Achievements">
 
 ### Editor Page:
 <img src="./images/editor_page_screenshot.png" height="400" alt="Editor Page">
+<img src="./images/editor_page_screenshot2.png" height="400" alt="Editor Page">
 
 ## Pages
 
