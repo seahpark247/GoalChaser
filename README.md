@@ -16,6 +16,8 @@ The app allows users to break down large goals into smaller, actionable tasks, a
 - **Haptic Feedback**: When erasing a box (indicating task completion), the app provides haptic feedback, giving users a tangible sense of accomplishment.
 - **Simple and Focused UI**: The app has an easy-to-use, distraction-free interface to help students stay focused on their goals.
 
+---
+
 ## Screenshots
 
 Here are a few screenshots from the app:
@@ -39,6 +41,8 @@ Here are a few screenshots from the app:
   <img src="./images/my_achievements_screenshot.png" height="400" alt="My Achievements">
   <img src="./images/my_achievements_screenshot2.png" height="400" alt="My Achievements">
 </div>
+
+---
 
 ## Pages
 
