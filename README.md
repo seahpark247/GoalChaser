@@ -64,4 +64,4 @@ By breaking down large goals into smaller, actionable tasks and providing visual
 
 1. Clone or download this repository:
    ```bash
-   git clone https://github.com/username/GoalChaser.git
+   git clone https://github.com/seahpark247/GoalChaser.git
